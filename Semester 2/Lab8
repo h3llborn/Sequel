@@ -1,0 +1,22 @@
+--Q1
+SELECT c.CompanyName AS "Customer", REPLACE(PostalCode,' ','-') AS "Postal Code",  ord.OrderID as "Order #" 
+FROM Customers c
+LEFT OUTER JOIN Orders ord
+ON c.CustomerID = ord.CustomerID 
+WHERE c.Country = 'France' OR c.Country = 'Canada'
+ORDER BY OrderID DESC;
+
+--Q2
+SELECT RPAD(SUBSTR(s.CompanyName,1,20),20,'.') AS "Company", RPAD(SUBSTR(p.ProductName,1,15),15,'.') AS "Product",
+      LPAD(p.unitPrice,7,'*') AS "Padded Price"
+FROM Suppliers s
+LEFT OUTER JOIN Products p
+ON s.SupplierID = p.SupplierID 
+WHERE LENGTH(p.UnitPrice) > 3
+ORDER BY unitPrice DESC;
+
+--Q3
+SELECT c.CompanyName, SUBSTR(c.Phone,INSTR(c.Phone,'('),INSTR(c.Phone,')')) AS "Area Code"
+FROM Customers c
+WHERE c.Phone IS NOT NULL
+ORDER BY c.CompanyName;
