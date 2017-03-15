@@ -1,0 +1,33 @@
+SELECT MAX(EmployeeID) FROM EMPLOYEES;
+ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD';
+--Create the sequence starting from the max 
+CREATE SEQUENCE employees_employeesid_seq
+INCREMENT BY 5
+START WITH 709
+NOCACHE
+NOCYCLE;
+--Create savepoint 
+SAVEPOINT SAVE_BEFORE_SEQUENCE; 
+-- Add two new employees to the employees table 
+INSERT INTO Employees (EmployeeID,empFirstName,empLastName,empStreetAddress,empCity,empState,empZipcode,empAreaCode,empPhoneNumber)
+VALUES (employees_employeesid_seq.nextval, 'Sheldon','Cooper','2311 Robles Ave','Pasadena','CA','91101','323','555-1111');
+INSERT INTO Employees (EmployeeID,empFirstName,empLastName,empStreetAddress,empCity,empState,empZipcode,empAreaCode,empPhoneNumber)
+VALUES (employees_employeesid_seq.nextval, 'Leonard','Hofstadter','2311 Robles Ave','Pasadena','CA','91101','323','555-1111');
+--Update all employees Zip code to 91101
+UPDATE Employees SET empZipcode = '91101';
+--Select and show all employees 
+SELECT EmployeeID,empFirstName,empLastName,empStreetAddress,empCity,empState,empZipcode,empAreaCode,empPhoneNumber,'Ryker Munn'
+FROM Employees;
+--Remove Sheldon and Leonard
+DELETE Employees WHERE EmployeeID > 708;
+--Select and show all employees 
+SELECT EmployeeID,empFirstName,empLastName,empStreetAddress,empCity,empState,empZipcode,empAreaCode,empPhoneNumber,'Ryker Munn'
+FROM Employees;
+--Rollback to the save point
+ROLLBACK TO SAVE_BEFORE_SEQUENCE;
+--Drop the sequence
+DROP SEQUENCE employees_employeesid_seq;
+--Final test
+--Select and show all employees 
+SELECT EmployeeID,empFirstName,empLastName,empStreetAddress,empCity,empState,empZipcode,empAreaCode,empPhoneNumber,'Ryker Munn'
+FROM Employees;
