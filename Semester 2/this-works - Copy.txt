@@ -1,0 +1,165 @@
+--Run it in this exact order--
+
+--at the bottom, put your name in--
+
+
+
+
+
+DROP TABLE customers CASCADE CONSTRAINTS;
+DROP TABLE employees CASCADE CONSTRAINTS;
+DROP TABLE shippers CASCADE CONSTRAINTS;
+DROP TABLE suppliers CASCADE CONSTRAINTS;
+DROP TABLE categories CASCADE CONSTRAINTS;
+DROP TABLE orders CASCADE CONSTRAINTS;
+DROP TABLE products CASCADE CONSTRAINTS;
+DROP TABLE orderdetails CASCADE CONSTRAINTS;
+
+
+CREATE TABLE Customers
+(
+  CustomerID CHAR(5) NOT NULL,
+  CompanyName VARCHAR2(40) NOT NULL,
+  ContactName VARCHAR2(30),
+  ContactTitle VARCHAR2(30),
+  Address VARCHAR2(60),
+  City VARCHAR2(15),
+  Region VARCHAR2(15),
+  PostalCode VARCHAR2(10),
+  Country VARCHAR2(15),
+  Phone VARCHAR2(24),
+  Fax VARCHAR2(24),
+  CONSTRAINT Customers_CustomerID_pk PRIMARY KEY (CustomerID),
+  Email VARCHAR2(50),
+  CONSTRAINT Customers_Email_UK UNIQUE(Email)
+);
+
+CREATE TABLE Employees
+(
+  EmployeeID NUMBER(8,0) NOT NULL,
+  LastName VARCHAR2 (20) NOT NULL,
+  FirstName VARCHAR2 (10) NOT NULL,
+  Title VARCHAR2 (30),
+  TitleOfCourtesy VARCHAR2 (25),
+  BirthDate Date,
+  HireDate Date,
+  Address VARCHAR2 (60),
+  City VARCHAR2 (15),
+  Region VARCHAR2 (15),
+  PostalCode VARCHAR2 (10),
+  Country VARCHAR2 (15),
+  HomePhone VARCHAR2 (24),
+  Extension VARCHAR2 (4),
+  Notes VARCHAR2 (600),
+  ReportsTo Number (8,0),
+  PhotoPath VARCHAR2 (255),
+  CONSTRAINT Employees_EmployeeID_PK PRIMARY KEY (EmployeeID),
+  SIN CHAR(9),
+  CONSTRAINT Employees_SIN_UK UNIQUE(SIN),
+  CONSTRAINT Employees_EmployeeID_fk FOREIGN KEY (ReportsTo) REFERENCES Employees(EmployeeID)
+);
+
+
+CREATE TABLE Shippers
+(
+  ShipperID Number(8,0) NOT NULL,
+  CompanyName VARCHAR2(40) NOT NULL,
+  Phone VARCHAR2(24),
+  CONSTRAINT Shippers_ShipperID_pk PRIMARY KEY (ShipperID)
+);
+
+CREATE TABLE Suppliers
+(
+  SupplierID NUMBER(8,0) NOT NULL,
+  CompanyName VARCHAR2(40) NOT NULL,
+  ContactName VARCHAR2 (30),
+  ContactTitle VARCHAR2 (30),
+  Address VARCHAR2 (60),
+  City VARCHAR2 (15),
+  Region VARCHAR2 (15),
+  PostalCode VARCHAR2 (10),
+  Country VARCHAR2 (15),
+  Phone VARCHAR2 (24),
+  Fax VARCHAR2 (24),
+  HomePage VARCHAR2 (200),
+  CONSTRAINT Suppliers_SupplierID_pk PRIMARY KEY (SupplierID)
+);
+
+CREATE TABLE Categories
+(
+  CategoryID NUMBER(8,0) NOT NULL,
+  CategoryName VARCHAR2 (15) NOT NULL,
+  Description VARCHAR2 (300),
+  CategoryCode NUMBER(6,0),
+  CONSTRAINT Categories_CategoryID_pk PRIMARY KEY (CategoryID),
+  CONSTRAINT Categories_CategoryCode_UK UNIQUE(CategoryCode)
+);
+
+CREATE TABLE Orders
+(
+  OrderID NUMBER(8,0) NOT NULL,
+  CustomerID CHAR (5),
+  EmployeeID NUMBER (8,0),
+  TerritoryID VARCHAR2(20),
+  OrderDate Date,
+  RequiredDate Date,
+  ShippedDate Date,
+  ShipVia NUMBER (8,0),
+  Freight NUMBER (8,2),
+  ShipName VARCHAR2(40),
+  ShipAddress VARCHAR2(60),
+  ShipCity VARCHAR2(15),
+  ShipRegion VARCHAR2(15),
+  ShipPostalCode VARCHAR2(10),
+  ShipCountry VARCHAR2(15),
+  CONSTRAINT Orders_OrderID_pk PRIMARY KEY (OrderID),
+  CONSTRAINT Orders_CustomerID_fk FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+  CONSTRAINT Orders_ShipVia_fk FOREIGN KEY (ShipVia) REFERENCES Shippers(ShipperID),
+  CONSTRAINT Orders_EmployeeID_fk FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+
+CREATE TABLE Products
+(
+  ProductID NUMBER(8,0) NOT NULL,
+  ProductName VARCHAR2(40) NOT NULL,
+  SupplierID NUMBER(8,0),
+  CategoryID NUMBER(8,0),
+  QuantityPerUnit VARCHAR2 (20),
+  UnitPrice NUMBER(8,2),
+  UnitsInStock NUMBER(6,0),
+  UnitsOnOrder NUMBER(6,0),
+  ReOrderLevel NUMBER(6,0),
+  DISCONTINUED NUMBER(1,0) NOT NULL,
+  CONSTRAINT Products_ProductID_pk PRIMARY KEY (ProductID),
+  CONSTRAINT Products_UnitPrice_CK CHECK(UnitPrice >= 0),
+  CONSTRAINT Products_ReOrderLevel_CK CHECK(ReOrderLevel >= 0),
+  CONSTRAINT Products_UnitsInStock_CK CHECK(UnitsInStock >= 0),
+  CONSTRAINT Products_UnitsOnOrder_CK CHECK(UnitsOnOrder >= 0),
+  CONSTRAINT Products_SupplierID_fk FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID),
+  CONSTRAINT Products_CategoryID_fk FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+
+CREATE TABLE OrderDetails
+(
+  OrderID NUMBER(8,0) NOT NULL,
+  ProductID NUMBER(8,0) NOT NULL,
+  UnitPrice NUMBER(8,2) NOT NULL,
+  Quantity NUMBER(8,0) NOT NULL,
+  Discount NUMBER(2,2) NOT NULL,
+  CONSTRAINT OrderDetails_OID_PID_pk PRIMARY KEY (OrderID,ProductID),
+  CONSTRAINT OrderDetails_Discount_CK CHECK(Discount >= 0 AND Discount < 1),
+  CONSTRAINT OrderDetails_Quantity_CK CHECK(Quantity > 0),
+  CONSTRAINT OrderDetails_UnitPrice_CK CHECK(UnitPrice >= 0),
+  CONSTRAINT OrderDetails_OrderID_fk FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+  CONSTRAINT OrderDetails_ProductID_fk FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+SELECT table_name, constraint_name, constraint_type, search_condition,'PUT YOUR NAME HERE'
+FROM USER_CONSTRAINTS
+WHERE table_name IN ('CATEGORIES','EMPLOYEES','ORDERS','ORDERDETAILS','SHIPPERS','SUPPLIERS','PRODUCTS','CUSTOMERS')
+AND constraint_name NOT LIKE 'SYS%'
+ORDER BY 1;
+
+EXEC dbms_stats.gather_schema_stats('PROJECTS');
+SELECT table_name, num_rows, 'PUT YOUR NAME HERE' FROM user_tables
+ORDER BY num_rows DESC;

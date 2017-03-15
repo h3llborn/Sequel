@@ -1,0 +1,61 @@
+Table CATEGORIES dropped.
+
+
+Table CATEGORIES created.
+
+
+Table CUSTOMERS dropped.
+
+
+Table CUSTOMERS created.
+
+
+Table EMPLOYEES dropped.
+
+
+Table EMPLOYEES created.
+
+
+Table ORDERDETAILS dropped.
+
+
+Table ORDERDETAILS created.
+
+Table ORDERS dropped.
+
+
+Table ORDERS created.
+
+
+Table PRODUCTS dropped.
+
+
+Table PRODUCTS created.
+
+
+Table SUPPLIERS dropped.
+
+
+Table SUPPLIERS created.
+
+
+Table SHIPPERS dropped.
+
+
+Table SHIPPERS created.
+
+PL/SQL procedure successfully completed.
+
+
+TABLE_NAME                       NUM_ROWS 'RYKERMUN
+------------------------------ ---------- ---------
+CATEGORIES                              0 RykerMunn
+CUSTOMERS                               0 RykerMunn
+EMPLOYEES                               0 RykerMunn
+ORDERDETAILS                            0 RykerMunn
+ORDERS                                  0 RykerMunn
+PRODUCTS                                0 RykerMunn
+SUPPLIERS                               0 RykerMunn
+SHIPPERS                                0 RykerMunn
+
+ 8 rows selected 
