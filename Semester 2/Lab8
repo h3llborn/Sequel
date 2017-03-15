@@ -18,5 +18,11 @@ ORDER BY unitPrice DESC;
 --Q3
 SELECT c.CompanyName, SUBSTR(c.Phone,INSTR(c.Phone,'('),INSTR(c.Phone,')')) AS "Area Code"
 FROM Customers c
-WHERE c.Phone IS NOT NULL
+WHERE SUBSTR(c.Phone,INSTR(c.Phone,'('),INSTR(c.Phone,')')) IS NOT NULL
 ORDER BY c.CompanyName;
+
+--Q4
+SELECT c.ContactName, c.ContactTitle
+FROM Customers c
+WHERE SUBSTR(ContactTitle, INSTR(ContactTitle, ' ',1,1) + 1, 
+INSTR(ContactTitle, ' ', 1, 2) - INSTR(ContactTitle, ' ',1,1) -1) = 'Sales';
